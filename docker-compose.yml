@@ -3,24 +3,27 @@ version: "3.9"
 services:
   web:
     container_name: web
-    image: node
-    restart: always
     build: .
     ports:
-      - 4000:4000
-    links:
+      - "4000:4000"
+    depends_on:
       - mongo
-    volumes:
-      - .:/usr/src/app
     environment:
-      - MONGODB_URI=mongodb://mongo/notesdb
+      - MONGODB_URI=mongodb://${MONGO_USER}:${MONGO_PASS}@mongo:27017/notesdb
       - PORT=4000
-      - NODE_ENV=development
-    command: /bin/sh -c 'npm install && npm run dev'
+      - NODE_ENV=production
+    command: npm run dev
+
   mongo:
     container_name: database
-    image: mongo
+    image: mongo:6
     ports:
       - "27017:27017"
-    logging:
-      driver: none
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASS}
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
