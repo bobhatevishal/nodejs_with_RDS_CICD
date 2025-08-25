@@ -3,7 +3,7 @@ version: "3.9"
 services:
   web:
     container_name: web
-    build: .
+    image: 10.0.1.208:5000/my-nodejs-app:latest   # 👈 pull from Nexus on Jenkins server
     restart: always
     ports:
       - "4000:4000"
@@ -15,4 +15,4 @@ services:
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
       - SECRET=${SECRET}
       - NODE_ENV=production
-    command: /bin/sh -c "npm install && npm run dev"
+    command: /bin/sh -c "npm run dev"
